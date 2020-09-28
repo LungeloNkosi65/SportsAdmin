@@ -80,6 +80,11 @@ export class SportCrudComponent implements OnInit {
   }
 
 
+  isValidInput(feildName):boolean{
+    return this.sportsForm.controls[feildName].invalid &&
+    (this.sportsForm.controls[feildName].dirty || this.sportsForm.controls[feildName].touched);
+  }
+
 
 
   onFormSubmit(){
@@ -92,7 +97,7 @@ clearForm(){
 }
   setHeading(){
     this.sportUpdate=null;
-    this.clearForm();
+    this.sportsForm.reset();
   }
 
 }

@@ -4,7 +4,7 @@ import { Country } from '../../Models/country';
 import { Tournament } from '../../Models/tournament';
 import { SportTournament } from '../../Models/sportTournament';
 import { SportTournamentService } from '../../services/sport-tournament.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { SportTreeService } from 'src/app/services/sport-tree.service';
 import { TournamentService } from 'src/app/services/tournament.service';
 import { CountryService } from 'src/app/services/country.service';
@@ -43,7 +43,9 @@ export class SportTournamentComponent implements OnInit {
     this.getCountries();
     this.getSports();
     this.sportTournamenteForm = this.formBuilder.group({
-
+       SportId:['',Validators.required],
+       CountryId:['',Validators.required],
+       TournamentId:['',Validators.required]
     });
   }
 
@@ -101,7 +103,7 @@ export class SportTournamentComponent implements OnInit {
         sportTournament.SportId=this.Selectedsport.SportId;
         sportTournament.TournamentId=this.Selectedtournament.TournamentId;
         this.updateLink(this.sportTournamentUpdate, sportTournament);
-        this.setHeading();
+        // this.setHeading();
 
       }
 
@@ -139,17 +141,22 @@ export class SportTournamentComponent implements OnInit {
   getSportId(sport: any) {
     this.Selectedsport=sport;
     this.sportId = sport.SportId;
+    this.sportTournamenteForm.controls['SportId'].setValue(sport.SportId);
     // console.log('submited sportId', this.Selectedsport);
   }
   getCountryId(country: any) {
     this.Selectedcountry=country;
     this.countryId = country.CountryId;
+    this.sportTournamenteForm.controls['CountryId'].setValue(country.CountryId);
+
     // console.log('submited country', this.Selectedcountry)
   }
   getTournamentId(tournament: any) {
     // console.log('submited tournament', tournament);
     this.Selectedtournament = tournament;
     this.tournamentId = tournament.TournamentId;
+    this.sportTournamenteForm.controls['TournamentId'].setValue(tournament.TournamentId);
+
   }
 
   onFormSubmit() {
@@ -158,6 +165,7 @@ export class SportTournamentComponent implements OnInit {
       CountryId: this.countryId,
       TournamentId: this.tournamentId
     };
+
     this.addSportsTournaments(this.sportTournamentData);
   }
 
@@ -170,13 +178,19 @@ export class SportTournamentComponent implements OnInit {
     // console.log('TournamentId passed',tournamentId)
     this.sportService.getSIngleSport(sportId).subscribe((data:any)=>{
       this.Selectedsport=data[0];
+    this.sportTournamenteForm.controls['SportId'].setValue(this.Selectedsport.SportId);
+
     });
     this.countryService.getSingleCountry(countryId).subscribe((data:any)=>{
       this.Selectedcountry=data[0];
+    this.sportTournamenteForm.controls['CountryId'].setValue(this.Selectedcountry.CountryId);
+
     });
 
     this.tournamentService.getSingleTournament(tournamentId).subscribe((data:any)=>{
       this.Selectedtournament=data[0];
+    this.sportTournamenteForm.controls['TournamentId'].setValue(this.Selectedtournament.TournamentId);
+
       // console.log('Tournament To Edit',data[0]);
     });
   }
@@ -200,6 +214,7 @@ export class SportTournamentComponent implements OnInit {
       Flag:null
     };
     this.sportTournamentUpdate=null;
+    this.sportTournamenteForm.reset();
   }
 
 }

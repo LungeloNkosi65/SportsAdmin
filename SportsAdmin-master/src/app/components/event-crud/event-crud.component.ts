@@ -30,7 +30,8 @@ export class EventCrudComponent implements OnInit {
     this.getEvents();
     this.eventForm=this.formBuilder.group({
       EventName:['',Validators.required],
-      EeventDate:['',Validators.required]
+      EeventDate:['',Validators.required],
+      TournamentId:['',Validators.required]
     });
     // this.tournaments.lenghtl
   }
@@ -75,6 +76,7 @@ export class EventCrudComponent implements OnInit {
           if(data!=null){
             this.getEvents();
             this.changeHeading();
+            alert("Added Successfully");
           }
         });
       }
@@ -84,6 +86,8 @@ export class EventCrudComponent implements OnInit {
         this.eventService.updateEvent(this.eventUpdate,event).subscribe((data:any)=>{
             this.getEvents();
             this.changeHeading();
+            alert("Record Updated Successfully");
+
         });
       }
     }
@@ -94,6 +98,8 @@ export class EventCrudComponent implements OnInit {
       this.eventService.deleteEvent(eventId).subscribe((data:any)=>{
         if(data!=null){
           this.getEvents();
+          alert("Record Deleted");
+
         }
       });
      }
@@ -106,6 +112,7 @@ export class EventCrudComponent implements OnInit {
       this.tournamentId=this.event[0].TournamentId;
       this.eventForm.controls['EventName'].setValue(this.event[0].EventName);
       this.eventForm.controls['EeventDate'].setValue(this.event[0].EeventDate);
+      this.eventForm.controls['TournamentId'].setValue(this.event[0].TournamentId);
     });
      console.log('eventId passed ',eventId)
     //  this.eventForm.
@@ -120,6 +127,7 @@ export class EventCrudComponent implements OnInit {
    getTournamentId(tournamentId:any){
      this.Selectedtournament=tournamentId;
      this.tournamentId=this.Selectedtournament.TournamentId;
+     this.eventForm.controls['TournamentId'].setValue(this.Selectedtournament.TournamentId);
      console.log('submited id', this.tournamentId);
    }
    clearForm(){

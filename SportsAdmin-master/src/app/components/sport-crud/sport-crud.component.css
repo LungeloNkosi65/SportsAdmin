@@ -12,3 +12,7 @@
 .btn-danger{
     background-color: rgb(221, 9, 9) !important;
 }
+
+.alert-text{
+    color:yellow !important;
+}

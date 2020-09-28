@@ -13,7 +13,7 @@
           <div class="modal-content">
               <div class="modal-header">
                   <ng-template [ngIf]="Selectedsport.SportId==null">
-                    <h5 class="modal-title">Link Sport With Country</h5>
+                    <h5 class="modal-title">Link Sport With Country And Tournament</h5>
                   </ng-template>
                   <ng-template [ngIf]="Selectedsport.SportId!=null">
                     <h5 class="modal-title">Update Link</h5>
@@ -89,7 +89,7 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary btn-modal-dismis" data-dismiss="modal" (click)="setHeading()">Close</button>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onFormSubmit()">Save</button>
+                  <button  type="button" class="btn btn-primary"  data-dismiss="modal" (click)="onFormSubmit()"  [disabled]="!sportTournamenteForm.valid">Save</button>
               </div>
           </div>
       </div>

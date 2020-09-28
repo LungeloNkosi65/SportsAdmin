@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SportCountry } from '../../Models/SportCountry';
 import { SportsCountryService } from 'src/app/services/sports-country.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Country } from 'src/app/Models/country';
 import { Sport } from 'src/app/Models/sport';
 import { SportTreeService } from 'src/app/services/sport-tree.service';
@@ -37,6 +37,8 @@ export class SportCountryComponent implements OnInit {
     this.getCountries();
     this.getSports();
     this.sportCountryForm = this.formBuilder.group({
+      SportId:['',Validators.required],
+      CountryId:['',Validators.required]
     });
   }
 
@@ -146,12 +148,15 @@ export class SportCountryComponent implements OnInit {
   getSportId(sport: any) {
     this.Selectedsport=sport
     this.sportId = sport.SportId;
+    this.sportCountryForm.controls['SportId'].setValue(sport.SportId);
     // console.log('sportId', this.sportId);
     // console.log('sport for dropdown', this.Selectedsport);
   }
   getCountryId(country:any) {
     this.Selectedcountry=country;
     this.countryId = country.CountryId;
+    this.sportCountryForm.controls['CountryId'].setValue(country.CountryId);
+
     // console.log('countryId', this.countryId);
     // console.log('country for dropdown',this.Selectedcountry);
   }
@@ -176,6 +181,9 @@ export class SportCountryComponent implements OnInit {
         //  console.log('Db record',this.sportCountry);
          this.sportId=data[0].SportId;
          this.countryId=data[0].CountryId;
+         this.sportCountryForm.controls['SportId'].setValue(data[0].SportId);
+         this.sportCountryForm.controls['CountryId'].setValue(data[0].CountryId);
+
          this.getReferenceCounrtry();
          this.getReferenceSPort();
        });
@@ -192,7 +200,8 @@ export class SportCountryComponent implements OnInit {
       SportId:null,
       Name:'Select Sport',
       Logo:null
-    }
+    };
+    this.sportCountryForm.reset();
 
   }
 

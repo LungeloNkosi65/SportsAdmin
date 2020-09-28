@@ -6,7 +6,7 @@ import { BetType } from '../../Models/betType';
 import { BettypeService } from '../../services/bettype.service';
 import { TournamentBettypeService } from '../../services/tournament-bettype.service';
 import { TournamentService } from '../../services/tournament.service';
-import { FormBuilder } from '@angular/forms/';
+import { FormBuilder, Validators } from '@angular/forms/';
 import { throwIfEmpty } from 'rxjs/operators';
 import { TournamentBetTypeVm } from 'src/app/Models/ViewModels/tournamentBetTypeVm';
 @Component({
@@ -27,8 +27,8 @@ export class TournamentBettypeComponent implements OnInit {
   tournamentAssociationForm: any;
   tournamentId: number;
   betTypeId: number;
-  localFormData:any;
-  tournamentUpdate:number=null;
+  localFormData: any;
+  tournamentUpdate: number = null;
 
   constructor(private betTypeService: BettypeService, private tournamentBettypeService: TournamentBettypeService
     , private tournamentService: TournamentService, private formBuilder: FormBuilder) { }
@@ -37,23 +37,26 @@ export class TournamentBettypeComponent implements OnInit {
     this.getAssociations();
     this.getTournaments();
     this.getBetTypes();
-    this.tournamentAssociationForm=this.formBuilder.group({});
+    this.tournamentAssociationForm = this.formBuilder.group({
+      TournamentId: ['', Validators.required],
+      BetTypeId: ['', Validators.required]
+    });
 
   }
 
   getTournaments() {
-    this.selectedtournament={
-      TournamentId:null,
-      Name:'Selected Tournament',
+    this.selectedtournament = {
+      TournamentId: null,
+      Name: 'Selected Tournament',
     };
     this.tournamentService.getTournaments().subscribe((data: any) => {
       this.tournaments = data;
     });
   }
   getBetTypes() {
-    this.selectedbetType={
-      BetTypeId:null,
-      BetTypeName:'Select Bet Type'
+    this.selectedbetType = {
+      BetTypeId: null,
+      BetTypeName: 'Select Bet Type'
     };
     this.betTypeService.getBeTypes().subscribe((data: any) => {
       this.betTypes = data;
@@ -62,101 +65,105 @@ export class TournamentBettypeComponent implements OnInit {
   getAssociations() {
     this.tournamentBettypeService.getTournamentBettypes().subscribe((data: any) => {
       this.tournamentAssociations = data;
-      console.log('data', data)
+      // console.log('data', data)
     });
   }
 
   addLink(tournmentBetType: TournamentBetType) {
     if (tournmentBetType != undefined && tournmentBetType != null) {
-      if(this.tournamentUpdate==null){
-        this.tournamentBettypeService.addAssociation(tournmentBetType).subscribe((data:any) => {
-          if(data!=undefined){
+      if (this.tournamentUpdate == null) {
+        this.tournamentBettypeService.addAssociation(tournmentBetType).subscribe((data: any) => {
+          if (data != undefined) {
             this.getAssociations();
-            this.tournamentId=null;
-            this.betTypeId=null;
-            this.tournamentUpdate=null;
+            this.tournamentId = null;
+            this.betTypeId = null;
+            this.tournamentUpdate = null;
             this.setHeading();
           }
         });
       }
-      else{
-        tournmentBetType.BetTypeId=this.selectedbetType.BetTypeId;
-        tournmentBetType.TournamentId=this.selectedtournament.TournamentId;
-        tournmentBetType.TbTid=this.tournamentUpdate;
-        this.updatezlink(this.tournamentUpdate,tournmentBetType);
+      else {
+        tournmentBetType.BetTypeId = this.selectedbetType.BetTypeId;
+        tournmentBetType.TournamentId = this.selectedtournament.TournamentId;
+        tournmentBetType.TbTid = this.tournamentUpdate;
+        this.updatezlink(this.tournamentUpdate, tournmentBetType);
       }
-  
+
     }
   }
-  updatezlink(tbTId:number,tournamentBetType:TournamentBetType){
-     this.tournamentBettypeService.updateLink(tbTId,tournamentBetType).subscribe(data=>{
-       if(data!=null || data!=undefined){
-         this.getAssociations();
-         this.tournamentUpdate=null;
-         this.setHeading();
-       }
-     })
+  updatezlink(tbTId: number, tournamentBetType: TournamentBetType) {
+    this.tournamentBettypeService.updateLink(tbTId, tournamentBetType).subscribe(data => {
+      if (data != null || data != undefined) {
+        this.getAssociations();
+        this.tournamentUpdate = null;
+        this.setHeading();
+      }
+    })
 
   }
   removeLink(tBtId: number) {
-    if(window.confirm("Are you sure you want to remove the linking")){
+    if (window.confirm("Are you sure you want to remove the linking")) {
       this.tournamentBettypeService.deleteLink(tBtId).subscribe((data) => {
-        if(data!=undefined){
+        if (data != undefined) {
           this.getAssociations();
-          console.log('Api result ',data);
+          // console.log('Api result ', data);
         }
       });
     }
-  
-  }
-  getTournamentId(tournament: any) {
-    this.selectedtournament=tournament;
-    this.tournamentId = tournament.TournamentId;
-    console.log('submited id',this.tournamentId );
-  }
-  getBetTypeId(betType: any) {
-    this.selectedbetType=betType;
-    this.betTypeId = betType.BetTypeId;
-    console.log('submited id',this.betTypeId );
 
   }
-  onSubmitForm(){
-  this.localFormData={
-    // TbTid:this.tournamentAssociations.length+1,
-    TournamentId:this.tournamentId,
-    BetTypeId:this.betTypeId
-   };
-   this.addLink(this.localFormData);
+  getTournamentId(tournament: any) {
+    this.selectedtournament = tournament;
+    this.tournamentId = tournament.TournamentId;
+    this.tournamentAssociationForm.controls['TournamentId'].setValue(tournament.TournamentId);
+    // console.log('submited id',this.tournamentId );
   }
-  setUpdate(tbtId:number){
-    this.tournamentUpdate=tbtId;
-    this.tournamentBettypeService.getSingleAssociation(tbtId).subscribe((data:any)=>{
-      this.loadDataForUpdate(data[0].BetTypeId,data[0].TournamentId);
+  getBetTypeId(betType: any) {
+    this.selectedbetType = betType;
+    this.betTypeId = betType.BetTypeId;
+    this.tournamentAssociationForm.controls['BetTypeId'].setValue(betType.BetTypeId);
+    // console.log('submited id',this.betTypeId );
+  }
+  onSubmitForm() {
+    this.localFormData = {
+      // TbTid:this.tournamentAssociations.length+1,
+      TournamentId: this.tournamentId,
+      BetTypeId: this.betTypeId
+    };
+    this.addLink(this.localFormData);
+  }
+  setUpdate(tbtId: number) {
+    this.tournamentUpdate = tbtId;
+    this.tournamentBettypeService.getSingleAssociation(tbtId).subscribe((data: any) => {
+      this.loadDataForUpdate(data[0].BetTypeId, data[0].TournamentId);
     });
   }
 
-     loadDataForUpdate(betTyepeId:number,tournamentId:number){
-       console.log('TournamentId', tournamentId);
-       this.betTypeService.getSingleBetType(betTyepeId).subscribe((data:any)=>{
-         this.selectedbetType=data[0];
-         console.log('BetType from db',data);
-       });
+  loadDataForUpdate(betTyepeId: number, tournamentId: number) {
+    console.log('TournamentId', tournamentId);
+    this.betTypeService.getSingleBetType(betTyepeId).subscribe((data: any) => {
+      this.selectedbetType = data[0];
+      this.tournamentAssociationForm.controls['BetTypeId'].setValue(this.selectedbetType.BetTypeId);
+      // console.log('BetType from db', data);
+    });
 
-       this.tournamentService.getSingleTournament(tournamentId).subscribe((data:any)=>{
-         this.selectedtournament=data[0];
-         console.log('Tournament from db',data);
-       });
-     }
-      
-    setHeading(){
-      this.selectedtournament={
-        TournamentId:null,
-        Name:'Selected Tournament',
-      };
-      this.selectedbetType={
-        BetTypeId:null,
-        BetTypeName:'Select Bet Type'
-      };
-      this.tournamentUpdate=null;
-    }
+    this.tournamentService.getSingleTournament(tournamentId).subscribe((data: any) => {
+      this.selectedtournament = data[0];
+      this.tournamentAssociationForm.controls['TournamentId'].setValue(this.selectedtournament.TournamentId);
+      // console.log('Tournament from db', data);
+    });
+  }
+
+  setHeading() {
+    this.selectedtournament = {
+      TournamentId: null,
+      Name: 'Selected Tournament',
+    };
+    this.selectedbetType = {
+      BetTypeId: null,
+      BetTypeName: 'Select Bet Type'
+    };
+    this.tournamentUpdate = null;
+    this.tournamentAssociationForm.reset();
+  }
 }

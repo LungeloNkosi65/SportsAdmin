@@ -92,4 +92,6 @@ export class BetTypeComponent implements OnInit {
     this.clearForm();
   }
 
+  // dafdfgdbvcdvkbvldbvld vlbvdklbkldvb ldbvodgvbhvlbvohbl
+
 }

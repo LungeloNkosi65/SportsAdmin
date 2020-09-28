@@ -14,7 +14,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <ng-template [ngIf]="betTypeMarketUpdate==null">
-                    <h5 class="modal-title">Link Market</h5>
+                    <h5 class="modal-title">Link Market With Bet Type</h5>
                 </ng-template>
                 <ng-template [ngIf]="betTypeMarketUpdate!=null">
                     <h5 class="modal-title">Update Link</h5>
@@ -70,7 +70,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-modal-dismis" data-dismiss="modal" (click)="setHeading()">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onformSubmit()">Save</button>
+                <button [disabled]="!betTypeMarketForm.valid" type="button" class="btn btn-primary" data-dismiss="modal" (click)="onformSubmit()">Save</button>
             </div>
         </div>
     </div>

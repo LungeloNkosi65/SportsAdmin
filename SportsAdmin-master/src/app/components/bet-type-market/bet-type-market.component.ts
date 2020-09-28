@@ -3,7 +3,7 @@ import {BetTypeMarketService} from '../../services/bet-type-market.service';
 import {BetTypeMarket} from '../../Models/betTypeMarket';
 import {BetType} from '../../Models/betType';
 import {Market} from '../../Models/market';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import {BettypeService} from '../../services/bettype.service';
 import {MarketService} from '../../services/market.service';
 import { BetTypeVm } from 'src/app/Models/ViewModels/betTypeVm';
@@ -36,6 +36,8 @@ export class BetTypeMarketComponent implements OnInit {
     this.getMarkets();
     this.getBetTypes();
     this.betTypeMarketForm=this.formBuilder.group({
+      BetTypeId:['',Validators.required],
+      MarketId:['',Validators.required]
     });
   }
 
@@ -112,6 +114,8 @@ export class BetTypeMarketComponent implements OnInit {
     this.betTyMarketService.getSingleBetTypeMarkets(betTypeMarketId).subscribe((data:any)=>{
       this.getBetTypeForDropdown(data[0].BetTypeId);
       this.getMarketForDropdown(data[0].MarketId);
+     
+
     })
   }
 
@@ -119,24 +123,30 @@ export class BetTypeMarketComponent implements OnInit {
   getMarketForDropdown(marketId:number){
     this.marketService.getSingleMarket(marketId).subscribe((data:any)=>{
        this.selectedMarket=data[0];
+       this.betTypeMarketForm.controls['MarketId'].setValue( this.selectedMarket.MarketId);
     });
   }
   getBetTypeForDropdown(betTypeId:number){
     this.betTypeService.getSingleBetType(betTypeId).subscribe((data:any)=>{
       this.selectedBetType=data[0];
+      this.betTypeMarketForm.controls['BetTypeId'].setValue(this.selectedBetType.BetTypeId);
+
     });
   }
 
   getBetTypeId(betType:any){
     this.selectedBetType=betType;
     this.betTypeId=betType.BetTypeId;
-    console.log('submited Id', this.betTypeId);
+    this.betTypeMarketForm.controls['BetTypeId'].setValue(this.selectedBetType.BetTypeId);
+    // console.log('submited Id', this.betTypeId);
 
   }
   getMarketId(market:any){
     this.selectedMarket=market;
     this.marketId=this.selectedMarket.MarketId;
-    console.log('submited Id', this.marketId);
+    this.betTypeMarketForm.controls['MarketId'].setValue( this.selectedMarket.MarketId);
+
+    // console.log('submited Id', this.marketId);
   }
 
   onformSubmit(){
@@ -158,6 +168,7 @@ export class BetTypeMarketComponent implements OnInit {
       BetTypeId:null,
       BetTypeName:'Select Bet Type'
     };
+    this.betTypeMarketForm.reset();
   }
 
 }

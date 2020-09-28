@@ -13,7 +13,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <ng-template [ngIf]="tournamentUpdate==null">
-                                <h5 class="modal-title">Link Tournament</h5>
+                                <h5 class="modal-title">Link Tournament With Bet Type</h5>
 
                             </ng-template>
                             <ng-template [ngIf]="tournamentUpdate!=null">
@@ -69,8 +69,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-modal-dismis" data-dismiss="modal" (click)="setHeading()">Close</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                (click)="onSubmitForm()">Save</button>
+                            <button [disabled]="!tournamentAssociationForm.valid" type="button" class="btn btn-primary" data-dismiss="modal"
+                                (click)="onSubmitForm()" >Save</button>
                         </div>
                     </div>
                 </div>

@@ -46,7 +46,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-modal-dismis" data-dismiss="modal" (click)="setHeading()">Close</button>
-                            <button type="submit" class="btn btn-primary"  data-dismiss="modal"  (click)="onFormSubmit()">Save</button>
+                            <button [disabled]="!bonusForm.valid" type="submit" class="btn btn-primary"  data-dismiss="modal"  (click)="onFormSubmit()">Save</button>
                         </div>
                     </div>
                 </div>

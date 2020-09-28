@@ -4,7 +4,7 @@
 
             <button type="button" class="btn btn-primary btn-add" data-toggle="modal" data-target="#modelId">
                 <!-- <i class="fa fa fa-plus"></i> -->
-                Add New
+                Add Sport
             </button>
 
             <!-- Modal -->
@@ -31,7 +31,13 @@
                                     </div>
                                     <div class="colo-md-8">
                                         <input type="text"  class="form-control"  placeholder="Sport Name" Name="Name" formControlName="Name" required>
+                                        <!-- <div *ngIf="isValidInput('Name')"  class="alert alert-danger">
+                                            <div *ngIf="sportsForm.controls['Name'].errors.requred" class="alert-text">
+                                                Sport Name Is Requred
+                                            </div>
+                                        </div> -->
                                     </div>
+
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-md-4">
@@ -45,7 +51,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-modal-dismis" data-dismiss="modal" (click)="setHeading()">Close</button>
-                            <button type="submit" class="btn btn-primary" data-dismiss="modal"
+                            <button [disabled]="!sportsForm.valid" type="submit" class="btn btn-primary" data-dismiss="modal"
                                 (click)="onFormSubmit()">Save</button>
                         </div>
                     </div>
